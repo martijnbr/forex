@@ -1,5 +1,5 @@
 class Event:
-    def on(self, str_event, fn_listener, priority = None):
+    def on(self, str_event, fn_listener, priority=None):
         if not '_event_listeners' in self.__dict__:
             self._event_listeners = {}
     
@@ -20,7 +20,7 @@ class Event:
                     return
             listeners.append(listener_object)
             
-    def trigger_event(self, str_event):
+    def trigger_event(self, str_event, bubble=True):
         if not '_event_listeners' in self.__dict__:
             self._event_listeners = {}
         
@@ -28,3 +28,6 @@ class Event:
             self._event_listeners[str_event] = []
         for listener in self._event_listeners[str_event]:
             listener['listener'](self)
+        
+        if bubble and 'parent' in self.__dict__:
+            self.parent.trigger_event(str_event)
